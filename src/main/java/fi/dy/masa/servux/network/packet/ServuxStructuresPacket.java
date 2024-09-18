@@ -94,36 +94,38 @@ public class ServuxStructuresPacket implements IServerPayloadData
         return !this.hasBuffer() && !this.hasNbt();
     }
 
-    @Override
-    public void toPacket(PacketByteBuf output)
+        @Override
+    public void toPacket(PacketByteBuf output) 
     {
         output.writeVarInt(this.packetType.get());
 
-        if (this.packetType.equals(Type.PACKET_S2C_STRUCTURE_DATA))
+        if (this.packetType.equals(Type.PACKET_S2C_STRUCTURE_DATA)) 
         {
             // Write Packet Buffer
-            try
+            try 
             {
-                output.writeBytes(this.buffer.readBytes(this.buffer.readableBytes()));
-            }
-            catch (Exception e)
+                PacketByteBuf copiedBuffer = new PacketByteBuf(this.buffer.copy());
+                output.writeBytes(copiedBuffer.readBytes(copiedBuffer.readableBytes()));
+            } 
+            catch (Exception e) 
             {
                 Servux.logger.error("ServuxStructuresPacket#toPacket: error writing data to packet: [{}]", e.getLocalizedMessage());
-            }
-        }
-        else
+           }
+       } 
+        else 
         {
             // Write NBT
-            try
+            try 
             {
                 output.writeNbt(this.nbt);
-            }
-            catch (Exception e)
+            } 
+            catch (Exception e) 
             {
                 Servux.logger.error("ServuxStructuresPacket#toPacket: error writing NBT to packet: [{}]", e.getLocalizedMessage());
             }
         }
     }
+
 
     @Nullable
     public static ServuxStructuresPacket fromPacket(PacketByteBuf input)
