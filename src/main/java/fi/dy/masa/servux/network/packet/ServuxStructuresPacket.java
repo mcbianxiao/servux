@@ -104,13 +104,14 @@ public class ServuxStructuresPacket implements IServerPayloadData
             // Write Packet Buffer
             try
             {
-                output.writeBytes(this.buffer.readBytes(this.buffer.readableBytes()));
+                PacketByteBuf copiedBuffer = new PacketByteBuf(this.buffer.copy());
+                output.writeBytes(copiedBuffer.readBytes(copiedBuffer.readableBytes()));
             }
             catch (Exception e)
             {
                 Servux.logger.error("ServuxStructuresPacket#toPacket: error writing data to packet: [{}]", e.getLocalizedMessage());
-            }
-        }
+           }
+       }
         else
         {
             // Write NBT
